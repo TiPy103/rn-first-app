@@ -1,21 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
+import InputContainer from './components/InputContainer';
+import TarefasItens from './components/TarefasItens';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    const [tarefas, setTarefas] = useState([])
+    const [input, setInput] = useState('')
+
+    // método que cria um objeto com uma key e um value, e adiciona na lista de tarefas
+    const addTarefa = input => {
+        setTarefas (tarefas => [...tarefas, {id: Math.random().toString(), value: input}])
+    }
+
+    //método que substitui a lista de tarefas por usa lista vazia
+    const cleanTarefas = () =>{
+        setTarefas([])
+    }
+
+    return (
+        <View style={styles.screen}>
+
+            <InputContainer addTarefa={addTarefa} cleanTarefas={cleanTarefas}/>
+
+            <FlatList
+                keyExtractor={(item) => item.id}
+                data={tarefas}
+                renderItem={itemData => (
+                    <TarefasItens title={itemData.item.value}/>
+                )}
+            />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    screen: {
+        padding: 50,
+    },
+    
 });
